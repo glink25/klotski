@@ -2,6 +2,10 @@ import { Event, Text } from "simple-canvas";
 import { textColor2 } from "../theme";
 import useFile, { FileType } from "../utils/useFile";
 
+function ellipsis(str: string, length = 10) {
+  return str.length > length ? str.slice(0, length - 3).concat("...") : str;
+}
+
 type SelectorType = {
   text?: string;
   onChoose?: (img: HTMLImageElement) => void;
@@ -38,12 +42,10 @@ export default function createSelector({
         const url = URL.createObjectURL(files[0]);
         const img = document.createElement("img");
         img.src = url;
-        textButton.text = `choose img: ${files[0].name}`;
+        textButton.text = `choose img: ${ellipsis(files[0].name)}`;
         onChoose(img);
       })
-      .catch(() => {
-        console.log("no file");
-      });
+      .catch(() => {});
   });
 
   return textButton;

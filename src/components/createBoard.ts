@@ -172,11 +172,9 @@ export default function createBoard({
     ? () => {
         for (let i = 0; i < items.length; i++) {
           if (game.isCorrect(i)) {
-            // items[i].backgroundColor = emphasisColor;
-            // (items[i].children[0] as Text).style.color = "white";
+            items[i].children[0].transform.alpha = 1;
           } else {
-            // items[i].backgroundColor = boardItemBackground;
-            // (items[i].children[0] as Text).style.color = textColor;
+            items[i].children[0].transform.alpha = 0.5;
           }
         }
       }

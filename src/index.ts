@@ -8,6 +8,7 @@ import createRecord from "./components/createRecord";
 import createSuccessPanel from "./components/createSuccessPanel";
 import createDialog from "./components/createDialog";
 import Enums from "./utils/enums";
+import createSelector from "./components/createSelector";
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const SIZE = {
@@ -41,6 +42,7 @@ const successPanel = createSuccessPanel({
 });
 const successDialog = createDialog({ scene, content: successPanel });
 
+let boardImage: HTMLImageElement;
 const Difficulty = new Enums(["Simple", "Medium", "Hard"]);
 const options = [
   {
@@ -55,8 +57,10 @@ const options = [
         onSuccess: () => {
           successDialog.show();
         },
+        image: boardImage,
       });
       scene.removeChild(menu);
+      scene.removeChild(selector);
       scene.addChild(record);
       scene.addChild(board);
     },
@@ -72,6 +76,13 @@ const options = [
 ];
 const menu = createMenu(options);
 
+const selector = createSelector({
+  onChoose: (img) => {
+    boardImage = img;
+  },
+});
+
 scene.addChild(bg);
 scene.addChild(title);
 scene.addChild(menu);
+scene.addChild(selector);

@@ -66,7 +66,7 @@ export default class Game {
         return false;
       });
     });
-    return [x, y];
+    return [x, y] as [number, number];
   }
   findAround(i: number, j: number) {
     let dir: [number, number] = [-2, -2];

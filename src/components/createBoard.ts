@@ -1,5 +1,14 @@
-import { Component, Event, Linear, Rect, Text, Tween } from "simple-canvas";
-import { Point } from "simple-canvas/types/type";
+import {
+  Component,
+  Event,
+  Img,
+  Linear,
+  Rect,
+  Text,
+  Tween,
+  Mask,
+} from "simple-canvas";
+import { Point, Size } from "simple-canvas/types/type";
 import {
   boardBackground,
   boardItemBackground,
@@ -12,6 +21,7 @@ type BoardArg = {
   level?: number;
   onMove?: () => void;
   onSuccess?: () => void;
+  image?: HTMLImageElement;
 };
 
 function animatedMove(comp: Component, offset: Point, after = () => {}) {
@@ -28,10 +38,110 @@ function animatedMove(comp: Component, offset: Point, after = () => {}) {
   tween.play().after(after);
 }
 
+function createNumberItem(
+  size: Size,
+  i: number,
+  j: number,
+  padding: number,
+  value: number,
+  _image: HTMLImageElement,
+  _level: number
+) {
+  const item = new Rect({
+    transform: {
+      size,
+      anchor: {
+        x: 0,
+        y: 0,
+      },
+      position: {
+        x: size.width / 2 + padding + (size.width + padding) * i,
+        y: size.height / 2 + padding + (size.height + padding) * j,
+      },
+    },
+    backgroundColor: boardItemBackground,
+    borderRadius: 4,
+  });
+  item.addChild(
+    new Text({
+      text: value.toString(),
+      transform: {
+        anchor: {
+          x: 0.5,
+          y: 0.5,
+        },
+      },
+      style: {
+        color: textColor,
+        fontWeight: "bold",
+      },
+    })
+  );
+  return item;
+}
+function createImageItem(
+  size: Size,
+  i: number,
+  j: number,
+  padding: number,
+  _value: number,
+  image: HTMLImageElement,
+  level: number
+) {
+  const valueY = parseInt(`${_value / level}`);
+  const valueX = _value % level;
+  const item = new Rect({
+    transform: {
+      size,
+      anchor: {
+        x: 0,
+        y: 0,
+      },
+      position: {
+        x: size.width / 2 + padding + (size.width + padding) * i,
+        y: size.height / 2 + padding + (size.height + padding) * j,
+      },
+    },
+    backgroundColor: boardItemBackground,
+    borderRadius: 4,
+  });
+  const w = image.width / level;
+  const img = new Img({
+    transform: { size, anchor: { x: 0.5, y: 0.5 } },
+    image,
+    clip: {
+      x: w * valueX,
+      y: w * valueY,
+      w,
+      h: image.height / level,
+    },
+  });
+  item.addChild(img);
+  item.use(new Mask());
+  if (level < 7)
+    item.addChild(
+      new Text({
+        text: _value.toString(),
+        transform: {
+          anchor: {
+            x: 0.5,
+            y: 0.5,
+          },
+        },
+        style: {
+          color: textColor,
+          fontWeight: "bold",
+        },
+      })
+    );
+  return item;
+}
+
 export default function createBoard({
   level = 3,
   onMove = () => {},
   onSuccess = () => {},
+  image,
 }: BoardArg) {
   const game = new Game(level);
   const BOARD_SIZE = {
@@ -58,52 +168,35 @@ export default function createBoard({
   let canTap = true;
   const items: Rect[] = new Array(game.blank);
 
-  const validateItem = () => {
-    for (let i = 0; i < items.length; i++) {
-      if (game.isCorrect(i)) {
-        items[i].backgroundColor = emphasisColor;
-        (items[i].children[0] as Text).style.color = "white";
-      } else {
-        items[i].backgroundColor = boardItemBackground;
-        (items[i].children[0] as Text).style.color = textColor;
+  const validateItem = image
+    ? () => {
+        for (let i = 0; i < items.length; i++) {
+          if (game.isCorrect(i)) {
+            // items[i].backgroundColor = emphasisColor;
+            // (items[i].children[0] as Text).style.color = "white";
+          } else {
+            // items[i].backgroundColor = boardItemBackground;
+            // (items[i].children[0] as Text).style.color = textColor;
+          }
+        }
       }
-    }
-  };
+    : () => {
+        for (let i = 0; i < items.length; i++) {
+          if (game.isCorrect(i)) {
+            items[i].backgroundColor = emphasisColor;
+            (items[i].children[0] as Text).style.color = "white";
+          } else {
+            items[i].backgroundColor = boardItemBackground;
+            (items[i].children[0] as Text).style.color = textColor;
+          }
+        }
+      };
+  const createItem = image ? createImageItem : createNumberItem;
 
   game.map.forEach((row, j) => {
     row.forEach((value, i) => {
       if (value === game.blank) return;
-      const item = new Rect({
-        transform: {
-          size: ITEM_SIZE,
-          anchor: {
-            x: 0,
-            y: 0,
-          },
-          position: {
-            x: ITEM_SIZE.width / 2 + padding + (ITEM_SIZE.width + padding) * i,
-            y:
-              ITEM_SIZE.height / 2 + padding + (ITEM_SIZE.height + padding) * j,
-          },
-        },
-        backgroundColor: boardItemBackground,
-        borderRadius: 4,
-      });
-      item.addChild(
-        new Text({
-          text: value.toString(),
-          transform: {
-            anchor: {
-              x: 0.5,
-              y: 0.5,
-            },
-          },
-          style: {
-            color: textColor,
-            fontWeight: "bold",
-          },
-        })
-      );
+      const item = createItem(ITEM_SIZE, i, j, padding, value, image!, level);
       const event = item.use(new Event());
       event.on("pointerup", () => {
         if (!canTap) return;

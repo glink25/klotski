@@ -26,11 +26,7 @@ function animatedMove(comp: Component, offset: Point, after = () => {}) {
     comp.transform.position.x = from.x + offset.x * p;
     comp.transform.position.y = from.y + offset.y * p;
   });
-  tween.play().after(() => {
-    comp.transform.position.x = from.x + offset.x;
-    comp.transform.position.y = from.y + offset.y;
-    after();
-  });
+  tween.play().after(after);
 }
 
 function createNumberItem(

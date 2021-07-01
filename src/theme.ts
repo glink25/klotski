@@ -18,3 +18,5 @@ export const textColor2 = "#bbada1";
 export const buttonBackground = "#8e7a67";
 export const buttonTextColor = "#f9f6f2";
 export const emphasisColor = "#f1b17d";
+export const inputBackgroundColor = "#bbada1";
+export const inputTextColor = "white";

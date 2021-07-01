@@ -9,6 +9,7 @@ import createSuccessPanel from "./components/createSuccessPanel";
 import createDialog from "./components/createDialog";
 import Enums from "./utils/enums";
 import createSelector from "./components/createSelector";
+import createInput from "./components/createInput";
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const SIZE = {
@@ -61,6 +62,7 @@ const options = [
       });
       scene.removeChild(menu);
       scene.removeChild(selector);
+      scene.removeChild(input);
       scene.addChild(record);
       scene.addChild(board);
     },
@@ -82,7 +84,10 @@ const selector = createSelector({
   },
 });
 
+const [input] = createInput({});
+
 scene.addChild(bg);
 scene.addChild(title);
 scene.addChild(menu);
 scene.addChild(selector);
+scene.addChild(input);

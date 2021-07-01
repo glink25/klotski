@@ -9,7 +9,7 @@ export default function createTitle({ text }: TitleType) {
     text,
     style: {
       fontSize: 30,
-      color: textColor,
+      fill: textColor,
       fontWeight: "bold",
     },
     transform: {

@@ -67,7 +67,7 @@ function createNumberItem(
         },
       },
       style: {
-        color: textColor,
+        fill: textColor,
         fontWeight: "bold",
       },
     })
@@ -124,7 +124,7 @@ function createImageItem(
           },
         },
         style: {
-          color: textColor,
+          fill: textColor,
           fontWeight: "bold",
         },
       })
@@ -177,10 +177,10 @@ export default function createBoard({
         for (let i = 0; i < items.length; i++) {
           if (game.isCorrect(i)) {
             items[i].backgroundColor = emphasisColor;
-            (items[i].children[0] as Text).style.color = "white";
+            (items[i].children[0] as Text).style.fill = "white";
           } else {
             items[i].backgroundColor = boardItemBackground;
-            (items[i].children[0] as Text).style.color = textColor;
+            (items[i].children[0] as Text).style.fill = textColor;
           }
         }
       };

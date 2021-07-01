@@ -18,7 +18,7 @@ export default function createSelector({
     text,
     style: {
       fontSize: 24,
-      color: textColor2,
+      fill: textColor2,
       fontWeight: "bold",
     },
     transform: {

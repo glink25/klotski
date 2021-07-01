@@ -20,7 +20,7 @@ export default function createButton({ text, onTap }: TitleType) {
     text: text,
     style: {
       // fontSize: 30,
-      color: buttonTextColor,
+      fill: buttonTextColor,
     },
     transform: {
       anchor: {

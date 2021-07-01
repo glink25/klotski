@@ -19,7 +19,7 @@ export default function createSuccessPanel({
     text: titleText,
     style: {
       fontWeight: "bold",
-      color: textColor,
+      fill: textColor,
     },
     transform: {
       anchor: {

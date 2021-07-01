@@ -9,7 +9,7 @@ export default function createRecord({ steps = 0 }: RecordType) {
     text: `steps: ${steps}`,
     style: {
       fontSize: 28,
-      color: textColor2,
+      fill: textColor2,
       fontWeight: "bold",
     },
     transform: {

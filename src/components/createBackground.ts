@@ -1,5 +1,5 @@
-import { Rect } from "simple-canvas";
-import { Size } from "simple-canvas/types/type";
+import { Rect } from "canvee";
+import { Size } from "canvee/lib/packages/type";
 import { background } from "../theme";
 
 type BgType = {

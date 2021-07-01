@@ -1,4 +1,4 @@
-import { Rect, Text, Event } from "simple-canvas";
+import { Rect, Text, Event } from "canvee";
 import { buttonBackground, buttonTextColor } from "../theme";
 
 type TitleType = {

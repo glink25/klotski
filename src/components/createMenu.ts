@@ -1,4 +1,4 @@
-import { Rect, Component } from "simple-canvas";
+import { Rect, Component } from "canvee";
 import createButton from "./createButton";
 
 type MenuArg = Array<{

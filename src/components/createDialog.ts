@@ -1,4 +1,4 @@
-import { Component, Cubic, Event, Rect, Tween } from "simple-canvas";
+import { Component, Cubic, Event, Rect, Tween } from "canvee";
 
 type DialogArg = {
   scene: Component;

@@ -1,14 +1,5 @@
-import {
-  Component,
-  Event,
-  Img,
-  Linear,
-  Rect,
-  Text,
-  Tween,
-  Mask,
-} from "simple-canvas";
-import { Point, Size } from "simple-canvas/types/type";
+import { Component, Event, Img, Linear, Rect, Text, Tween, Mask } from "canvee";
+import { Point, Size } from "canvee/lib/packages/type";
 import {
   boardBackground,
   boardItemBackground,
@@ -35,7 +26,11 @@ function animatedMove(comp: Component, offset: Point, after = () => {}) {
     comp.transform.position.x = from.x + offset.x * p;
     comp.transform.position.y = from.y + offset.y * p;
   });
-  tween.play().after(after);
+  tween.play().after(() => {
+    comp.transform.position.x = from.x + offset.x;
+    comp.transform.position.y = from.y + offset.y;
+    after();
+  });
 }
 
 function createNumberItem(
@@ -148,7 +143,7 @@ export default function createBoard({
     width: 320,
     height: 320,
   };
-  const padding = 7;
+  const padding = 8;
   const ITEM_SIZE = {
     width: (BOARD_SIZE.width - padding * (level + 1)) / level,
     height: (BOARD_SIZE.width - padding * (level + 1)) / level,

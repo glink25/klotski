@@ -1,4 +1,4 @@
-import { Event, Text } from "simple-canvas";
+import { Event, Text } from "canvee";
 import { textColor2 } from "../theme";
 import useFile, { FileType } from "../utils/useFile";
 

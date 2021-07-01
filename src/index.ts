@@ -1,5 +1,5 @@
 import "./style.css";
-import SimpleCanvas, { Component, EventSystem, Text } from "simple-canvas";
+import SimpleCanvas, { Component, EventSystem, Text } from "canvee";
 import createBackground from "./components/createBackground";
 import createTitle from "./components/createTitle";
 import createMenu from "./components/createMenu";

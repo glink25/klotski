@@ -1,4 +1,4 @@
-import { Text } from "simple-canvas";
+import { Text } from "canvee";
 import { textColor } from "../theme";
 
 type TitleType = {

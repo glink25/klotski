@@ -1,4 +1,4 @@
-import { Rect, Text } from "simple-canvas";
+import { Rect, Text } from "canvee";
 import { textColor } from "../theme";
 import createButton from "./createButton";
 

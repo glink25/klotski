@@ -1,6 +1,6 @@
 import { Event, Linear, Rect, Text, Tween } from "canvee";
 import { inputBackgroundColor, inputTextColor } from "../theme";
-import { CustomEmitter } from "../utils/typeUtil";
+import { CustomEmitComponent } from "../utils/typeUtil";
 
 type InputArg = {
   text?: string;
@@ -70,7 +70,7 @@ function createUnderline() {
   // };
   line.on("hide", hide);
   line.on("show", show);
-  return line as CustomEmitter<typeof line, "hide" | "show", "">;
+  return line as CustomEmitComponent<typeof line, "hide" | "show", "">;
 }
 const MIN_WIDTH = 100;
 export default function createInput({ text = "" }: InputArg) {

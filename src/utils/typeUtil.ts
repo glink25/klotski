@@ -1,6 +1,10 @@
 import { Component } from "canvee";
 
-export type CustomEmitter<C extends Component, EmitNames, RecieverNames> = C & {
-  emit: EmitNames;
+export type CustomEmitComponent<
+  C extends Component,
+  EmitNames,
+  RecieverNames
+> = C & {
+  emit: (n: EmitNames) => void;
   on: (n: RecieverNames, fn: (e: any) => void | boolean) => void;
 };

@@ -1,6 +1,6 @@
 import { Rect, Text, Event } from "canvee";
 import { buttonBackground, buttonTextColor } from "../theme";
-import { CustomEmitter } from "../utils/typeUtil";
+import { CustomEmitComponent } from "../utils/typeUtil";
 
 type TitleType = {
   text: string;
@@ -43,5 +43,8 @@ export default function createButton({ text }: TitleType) {
   event.on("pointerup", () => {
     button.emit("tap");
   });
-  return button as CustomEmitter<typeof button, "tap", "">;
+  button.on("setButtonText", (e) => {
+    buttonText.text = e.value;
+  });
+  return button as CustomEmitComponent<typeof button, "setButtonText", "tap">;
 }

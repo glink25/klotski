@@ -1,6 +1,6 @@
 import { Rect, Text } from "canvee";
 import { textColor } from "../theme";
-import { CustomEmitter } from "../utils/typeUtil";
+import { CustomEmitComponent } from "../utils/typeUtil";
 import createButton from "./createButton";
 
 type SuccessPanelType = {
@@ -45,5 +45,5 @@ export default function createSuccessPanel({
   });
   box.addChild(title);
   box.addChild(button);
-  return box as CustomEmitter<typeof box, "", "confirm">;
+  return box as CustomEmitComponent<typeof box, "", "confirm">;
 }

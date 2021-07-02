@@ -1,5 +1,5 @@
 import { Component, Cubic, Event, Rect, Tween } from "canvee";
-import { CustomEmitter } from "../utils/typeUtil";
+import { CustomEmitComponent } from "../utils/typeUtil";
 
 type DialogArg = {
   scene: Component;
@@ -59,5 +59,5 @@ export default function createDialog({ scene, content }: DialogArg) {
   };
   dialog.on("show", show);
   dialog.on("hide", hide);
-  return dialog as CustomEmitter<typeof dialog, "show" | "hide", "">;
+  return dialog as CustomEmitComponent<typeof dialog, "show" | "hide", "">;
 }

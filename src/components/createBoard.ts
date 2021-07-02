@@ -17,7 +17,7 @@ import {
   emphasisColor,
   textColor,
 } from "../theme";
-import { CustomEmitter } from "../utils/typeUtil";
+import { CustomEmitComponent } from "../utils/typeUtil";
 import Game from "./game";
 
 type BoardArg = {
@@ -248,5 +248,5 @@ export default function createBoard({ level = 3, image }: BoardArg) {
     });
   });
   validateItem();
-  return board as CustomEmitter<typeof board, "", "succed" | "move">;
+  return board as CustomEmitComponent<typeof board, "", "succed" | "move">;
 }

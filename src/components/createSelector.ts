@@ -1,6 +1,6 @@
 import { Event, Text } from "canvee";
 import { textColor2 } from "../theme";
-import { CustomEmitter } from "../utils/typeUtil";
+import { CustomEmitComponent } from "../utils/typeUtil";
 import useFile, { FileType } from "../utils/useFile";
 
 function ellipsis(str: string, length = 10) {
@@ -43,5 +43,5 @@ export default function createSelector(text = "choose image:") {
       .catch(() => {});
   });
 
-  return textButton as CustomEmitter<typeof textButton, "", "choose">;
+  return textButton as CustomEmitComponent<typeof textButton, "", "choose">;
 }

@@ -3,7 +3,7 @@ import createButton from "./createButton";
 
 type MenuArg = Array<{
   text: string;
-  callback: (comp: Component) => void;
+  callback: (comp: ReturnType<typeof createButton>) => void;
 }>;
 export default function createMenu(arg: MenuArg) {
   const paddingTop = 20;

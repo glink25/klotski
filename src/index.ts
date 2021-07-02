@@ -45,7 +45,7 @@ const successDialog = createDialog({ scene, content: successPanel });
 
 let boardImage: HTMLImageElement;
 const Difficulty = new Enums(["Simple", "Medium", "Hard"]);
-const options = [
+const menu = createMenu([
   {
     text: "Start Game",
     callback: () => {
@@ -70,14 +70,11 @@ const options = [
   },
   {
     text: `Difficulty: ${Difficulty.default}`,
-    callback: (c: Component) => {
-      (
-        c.children[0] as unknown as Text
-      ).text = `Difficulty: ${Difficulty.next}`;
+    callback: (c) => {
+      c.emit("setButtonText", `Difficulty: ${Difficulty.next}`);
     },
   },
-];
-const menu = createMenu(options);
+]);
 
 const selector = createSelector();
 selector.on("choose", (e) => {

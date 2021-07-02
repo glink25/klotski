@@ -1,11 +1,11 @@
 import { Rect, Text, Event } from "canvee";
 import { buttonBackground, buttonTextColor } from "../theme";
+import { CustomEmitter } from "../utils/typeUtil";
 
 type TitleType = {
   text: string;
-  onTap: () => void;
 };
-export default function createButton({ text, onTap }: TitleType) {
+export default function createButton({ text }: TitleType) {
   const button = new Rect({
     transform: {
       size: {
@@ -41,7 +41,7 @@ export default function createButton({ text, onTap }: TitleType) {
     button.transform.scale.y = 1;
   });
   event.on("pointerup", () => {
-    onTap();
+    button.emit("tap");
   });
-  return button;
+  return button as CustomEmitter<typeof button, "tap", "">;
 }

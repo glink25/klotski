@@ -1,20 +1,16 @@
 import { Rect, Text } from "canvee";
 import { textColor } from "../theme";
+import { CustomEmitter } from "../utils/typeUtil";
 import createButton from "./createButton";
 
 type SuccessPanelType = {
   titleText?: string;
   ButtonText?: string;
-  onTapButton?: () => void;
 };
 export default function createSuccessPanel({
   titleText = "you win",
   ButtonText = "replay",
-  onTapButton = () => {},
 }: SuccessPanelType) {
-  const button = createButton({ text: ButtonText, onTap: onTapButton });
-  button.transform.anchor.x = 0.5;
-  button.transform.anchor.y = 0.7;
   const title = new Text({
     text: titleText,
     style: {
@@ -41,7 +37,13 @@ export default function createSuccessPanel({
     },
     backgroundColor: "aliceblue",
   });
+  const button = createButton({ text: ButtonText });
+  button.transform.anchor.x = 0.5;
+  button.transform.anchor.y = 0.7;
+  button.on("tap", () => {
+    box.emit("confirm");
+  });
   box.addChild(title);
   box.addChild(button);
-  return box;
+  return box as CustomEmitter<typeof box, "", "confirm">;
 }

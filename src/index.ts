@@ -1,5 +1,5 @@
 import "./style.css";
-import SimpleCanvas, { Component, EventSystem, Text } from "canvee";
+import SimpleCanvas, { Component, EventSystem, Shadow, Text } from "canvee";
 import createBackground from "./components/createBackground";
 import createTitle from "./components/createTitle";
 import createMenu from "./components/createMenu";
@@ -33,13 +33,13 @@ let steps = 0;
 const bg = createBackground({ size: AbsSize });
 const title = createTitle({ text: "KLOTSKI !" });
 
-const [record, setRecord] = createRecord({ steps });
+const record = createRecord({ steps });
 const successPanel = createSuccessPanel({
   titleText: "YOU WIN !!!",
   ButtonText: "Play Again",
-  onTapButton: () => {
-    location.reload();
-  },
+});
+successPanel.on("confirm", () => {
+  location.reload();
 });
 const successDialog = createDialog({ scene, content: successPanel });
 
@@ -51,14 +51,15 @@ const options = [
     callback: () => {
       const board = createBoard({
         level: Difficulty.currentIndex * 2 + 3,
-        onMove: () => {
-          steps += 1;
-          setRecord(steps);
-        },
-        onSuccess: () => {
-          successDialog.show();
-        },
         image: boardImage,
+      });
+      board.on("move", () => {
+        steps += 1;
+        record.emit("setRecord", steps);
+        return true;
+      });
+      board.on("succed", () => {
+        successDialog.emit("show");
       });
       scene.removeChild(menu);
       scene.removeChild(selector);
@@ -78,13 +79,14 @@ const options = [
 ];
 const menu = createMenu(options);
 
-const selector = createSelector({
-  onChoose: (img) => {
-    boardImage = img;
-  },
+const selector = createSelector();
+selector.on("choose", (e) => {
+  boardImage = e.value;
 });
 
-const [input] = createInput({});
+const input = createInput({});
+
+title.use(new Shadow({ color: "gray", offset: { x: 10, y: 10 }, blur: 10 }));
 
 scene.addChild(bg);
 scene.addChild(title);

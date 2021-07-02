@@ -1,4 +1,15 @@
-import { Component, Event, Img, Linear, Rect, Text, Tween, Mask } from "canvee";
+import {
+  Component,
+  Event,
+  Img,
+  Linear,
+  Rect,
+  Text,
+  Tween,
+  Mask,
+  Bounce,
+  Elastic,
+} from "canvee";
 import { Point, Size } from "canvee/lib/packages/type";
 import {
   boardBackground,
@@ -6,6 +17,7 @@ import {
   emphasisColor,
   textColor,
 } from "../theme";
+import { CustomEmitter } from "../utils/typeUtil";
 import Game from "./game";
 
 type BoardArg = {
@@ -17,16 +29,34 @@ type BoardArg = {
 
 function animatedMove(comp: Component, offset: Point, after = () => {}) {
   const from = { ...comp.transform.position };
-  const tween = new Tween({
-    from: 0,
-    to: 200,
-    curve: Linear,
-    duration: 200,
-  }).slicing((_, p) => {
-    comp.transform.position.x = from.x + offset.x * p;
-    comp.transform.position.y = from.y + offset.y * p;
+  // const tween = new Tween({
+  //   from: 0,
+  //   to: 200,
+  //   curve: Linear,
+  //   duration: 200,
+  // }).slicing((_, p) => {
+  //   comp.transform.position.x = from.x + offset.x * p;
+  //   comp.transform.position.y = from.y + offset.y * p;
+  // });
+  // tween.play().after(after);
+  const tweenX = new Tween({
+    from: from.x,
+    to: from.x + offset.x,
+    curve: Elastic.easeOut,
+    duration: 400,
+  }).slicing((v, p) => {
+    comp.transform.position.x = v;
   });
-  tween.play().after(after);
+  const tweenY = new Tween({
+    from: from.y,
+    to: from.y + offset.y,
+    curve: Elastic.easeOut,
+    duration: 400,
+  }).slicing((v, p) => {
+    comp.transform.position.y = v;
+  });
+  tweenY.play();
+  tweenX.play().after(after);
 }
 
 function createNumberItem(
@@ -128,12 +158,7 @@ function createImageItem(
   return item;
 }
 
-export default function createBoard({
-  level = 3,
-  onMove = () => {},
-  onSuccess = () => {},
-  image,
-}: BoardArg) {
+export default function createBoard({ level = 3, image }: BoardArg) {
   const game = new Game(level);
   const BOARD_SIZE = {
     width: 320,
@@ -152,11 +177,11 @@ export default function createBoard({
         y: 0.5,
       },
     },
+    name: "board",
     backgroundColor: boardBackground,
     borderRadius: 4,
   });
 
-  let canTap = true;
   const items: Rect[] = new Array(game.blank);
 
   const validateItem = image
@@ -182,11 +207,15 @@ export default function createBoard({
       };
   const createItem = image ? createImageItem : createNumberItem;
 
+  let isSucceed = false;
+  const getIsSucced = () => isSucceed;
+
   game.map.forEach((row, j) => {
     row.forEach((value, i) => {
       if (value === game.blank) return;
       const item = createItem(ITEM_SIZE, i, j, padding, value, image!, level);
       const event = item.use(new Event());
+      let canTap = true;
       event.on("pointerup", () => {
         if (!canTap) return;
 
@@ -200,16 +229,18 @@ export default function createBoard({
               y: move.direction[1]! * (ITEM_SIZE.height + padding),
             },
             () => {
+              if (getIsSucced()) return;
               canTap = true;
-              const rights = game.check();
+              const isRight = game.check();
               validateItem();
-              if (rights) {
-                onSuccess();
+              if (isRight) {
+                isSucceed = true;
                 canTap = false;
+                board.emit("succed", undefined, { bubble: true });
               }
             }
           );
-          onMove();
+          item.emit("move", undefined, { bubble: true });
         }
       });
       items[value] = item;
@@ -217,5 +248,5 @@ export default function createBoard({
     });
   });
   validateItem();
-  return board;
+  return board as CustomEmitter<typeof board, "", "succed" | "move">;
 }

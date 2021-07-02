@@ -1,19 +1,13 @@
 import { Event, Text } from "canvee";
 import { textColor2 } from "../theme";
+import { CustomEmitter } from "../utils/typeUtil";
 import useFile, { FileType } from "../utils/useFile";
 
 function ellipsis(str: string, length = 10) {
   return str.length > length ? str.slice(0, length - 3).concat("...") : str;
 }
 
-type SelectorType = {
-  text?: string;
-  onChoose?: (img: HTMLImageElement) => void;
-};
-export default function createSelector({
-  text = "choose image:",
-  onChoose = () => {},
-}: SelectorType) {
+export default function createSelector(text = "choose image:") {
   const textButton = new Text({
     text,
     style: {
@@ -43,10 +37,11 @@ export default function createSelector({
         const img = document.createElement("img");
         img.src = url;
         textButton.text = `choose img: ${ellipsis(files[0].name)}`;
-        onChoose(img);
+        // onChoose(img);
+        textButton.emit("choose", img);
       })
       .catch(() => {});
   });
 
-  return textButton;
+  return textButton as CustomEmitter<typeof textButton, "", "choose">;
 }

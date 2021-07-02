@@ -1,5 +1,6 @@
-import { Component, Event, Linear, Rect, Text, Tween } from "canvee";
+import { Event, Linear, Rect, Text, Tween } from "canvee";
 import { inputBackgroundColor, inputTextColor } from "../theme";
+import { CustomEmitter } from "../utils/typeUtil";
 
 type InputArg = {
   text?: string;
@@ -63,11 +64,13 @@ function createUnderline() {
       })
       .play();
   };
-  const controller = {
-    hide,
-    show,
-  };
-  return [line, controller] as [typeof line, typeof controller];
+  // const controller = {
+  //   hide,
+  //   show,
+  // };
+  line.on("hide", hide);
+  line.on("show", show);
+  return line as CustomEmitter<typeof line, "hide" | "show", "">;
 }
 const MIN_WIDTH = 100;
 export default function createInput({ text = "" }: InputArg) {
@@ -99,9 +102,8 @@ export default function createInput({ text = "" }: InputArg) {
       },
     },
   });
-  const [underline, underlineController] = createUnderline();
+  const underline = createUnderline();
   underline.transform.size.width = input.transform.size.width;
-  const controller = {};
   const textEl = document.createElement("input");
   textEl.style.position = "absolute";
   textEl.style.left = "-1000px";
@@ -122,10 +124,10 @@ export default function createInput({ text = "" }: InputArg) {
   };
   textEl.onfocus = () => {
     underline.transform.size.width = input.transform.size.width;
-    underlineController.show();
+    underline.emit("show");
   };
   textEl.onblur = () => {
-    underlineController.hide();
+    underline.emit("hide");
   };
   document.body.appendChild(textEl);
   input.use(new Event()).on("pointerdown", (e) => {
@@ -134,5 +136,5 @@ export default function createInput({ text = "" }: InputArg) {
   });
   input.addChild(inputText);
   input.addChild(underline);
-  return [input, controller] as [typeof input, typeof controller];
+  return input;
 }

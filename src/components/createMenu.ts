@@ -26,9 +26,9 @@ export default function createMenu(arg: MenuArg) {
   arg.forEach((config, index) => {
     const box = createButton({
       text: config.text,
-      onTap: () => {
-        config.callback(box);
-      },
+    });
+    box.on("tap", () => {
+      config.callback(box);
     });
     box.transform.position.y =
       paddingTop + boxHeight / 2 + index * (boxHeight + 20);

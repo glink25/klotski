@@ -30,5 +30,8 @@ export default function createRecord({ steps = 0 }: RecordType) {
   const setRecord = (s: number) => {
     record.text = `steps: ${s}`;
   };
-  return [record, setRecord] as [typeof record, typeof setRecord];
+  record.on("setRecord", (e) => {
+    setRecord(e.value);
+  });
+  return record;
 }
